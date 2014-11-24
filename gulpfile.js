@@ -7,10 +7,11 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 gulp.task('styles', function () {
-    return gulp.src('app/styles/main.scss')
+    return gulp.src('app/styles/*.scss')
         .pipe($.rubySass({
             style: 'expanded',
-            precision: 10
+            precision: 10,
+            compass: true
         }))
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('.tmp/styles'))
