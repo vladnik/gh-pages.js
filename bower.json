@@ -22,7 +22,7 @@
       "main": "src/javascripts/jquery.tocify.js"
     },
     "highlightjs": {
-      "main": ["highlight.pack.js", "styles/monokai_sublime.css"]
+      "main": "highlight.pack.js"
     }
   }
 }

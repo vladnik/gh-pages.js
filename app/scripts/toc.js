@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global) {
 
   var closeToc = function() {

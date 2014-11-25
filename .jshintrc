@@ -22,6 +22,8 @@
     "$": false,
     "jsyaml": false,
     "marked": false,
-    "lunr": false
+    "lunr": false,
+    "hljs": false,
+    "toc": false
   }
 }

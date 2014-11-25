@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 Copyright 2008-2013 Concur Technologies, Inc.
 
