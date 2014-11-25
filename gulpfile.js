@@ -55,8 +55,7 @@ gulp.task('images', function () {
 });
 
 gulp.task('fonts', function () {
-    return $.bowerFiles()
-        .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
+    return gulp.src('app/**/*.{eot,svg,ttf,woff}')
         .pipe($.flatten())
         .pipe(gulp.dest('dist/fonts'))
         .pipe($.size());
@@ -68,6 +67,7 @@ gulp.task('extras', function () {
 });
 
 gulp.task('clean', function () {
+    $.cache.clearAll();
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 

@@ -2,11 +2,27 @@
   "name": "gh-pages-js",
   "private": true,
   "dependencies": {
-    "jquery": "~1.11.0",
-    "marked": "~0.3.2",
-    "highlight": "~7.0.1",
-    "js-yaml": "~3.2.3",
-    "highlightjs": "~8.3.0"
+    "jquery": "latest",
+    "jquery-ui": "latest",
+    "marked": "latest",
+    "highlight": "latest",
+    "js-yaml": "latest",
+    "highlightjs": "latest",
+    "energize": "davidcalhoun/energize.js",
+    "jquery-highlight": "latest",
+    "jquery.tocify.js": "latest",
+    "lunr.js": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "overrides": {
+    "marked": {
+      "main": "lib/marked.js"
+    },
+    "jquery.tocify.js": {
+      "main": "src/javascripts/jquery.tocify.js"
+    },
+    "highlightjs": {
+      "main": ["highlight.pack.js", "styles/monokai_sublime.css"]
+    }
+  }
 }
