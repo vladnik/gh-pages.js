@@ -13,8 +13,8 @@
   index.field('body');
   index.pipeline.add(lunr.trimmer, lunr.stopWordFilter);
 
-  $(populate);
-  $(bind);
+  $(document).on('loaded', populate);
+  $(document).on('loaded', bind);
 
   function populate() {
     $('h1, h2').each(function() {

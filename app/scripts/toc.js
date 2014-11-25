@@ -42,8 +42,8 @@
     }, 50);
   }
 
-  $(makeToc);
-  $(animate);
+  $(document).on('loaded', makeToc);
+  $(document).on('loaded', animate);
 
 })(window);
 

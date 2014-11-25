@@ -23,8 +23,11 @@
       if (settings.toc_footers) {
         $('.toc-footer').html('<li>'+ settings.toc_footers.join('</li><li>') +'</li>');
       }
+      $(document).trigger('loaded');
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
       hljs.initHighlightingOnLoad();
-      setupLanguages(settings.language_tabs);
     };
     if (settings.includes) {
       var promises = [];
