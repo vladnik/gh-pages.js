@@ -11,7 +11,7 @@ toc_footers:
   - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
+  - docs/errors.md
 
 search: true
 ---
@@ -165,4 +165,3 @@ This endpoint retrieves a specific kitten.
 Parameter | Description
 --------- | -----------
 ID | The ID of the cat to retrieve
-
