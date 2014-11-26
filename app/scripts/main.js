@@ -1,63 +1,94 @@
 'use strict';
 // 
 (function(){
-  var renderPage = function(file) {
-    $.ajax({
-      url: 'https://api.github.com/repos/'+ file,
-      jsonp: 'callback',
-      dataType: 'jsonp',
-      success: function(data) {
-      var settings, content;
-      data = atob(data.data.content);
-      console.log(data);
+  var markedOptions = {
+    renderer: (function(){
       var renderer = new marked.Renderer();
       renderer.code = function(code, language){
         return '<pre><code class="highlight '+ language +'">'+ code +'</code></pre>';
       };
-
-      data = data.split(/\n+---\n+/);
-      settings = jsyaml.load(data[0]);
-      content = marked(data[1], {renderer: renderer, smartypants: true});
-      var finish = function () {
-        if (settings.language_tabs) {
-          var languages_html = '';
-          $.each(settings.language_tabs, function( index, value ) {
-            languages_html += '<a href="#" data-language-name="'+ value +'">'+ value +'</a>';
-          });
-          $('.lang-selector').html(languages_html);
-        }
-
-        if (settings.toc_footers) {
-          $('.toc-footer').html('<li>'+ settings.toc_footers.join('</li><li>') +'</li>');
-        }
-        $(document).trigger('loaded');
-        $('pre code').each(function(i, block) {
-          hljs.highlightBlock(block);
-        });
-        setupLanguages(settings.language_tabs);
-      };
-      if (!settings.includes) {
-        var promises = [];
-        $.each(settings.includes, function( index, include ) {
-          promises.push($.get( include + '.md', function(data) {
-            content += marked(data, {renderer: renderer, smartypants: true});
-          }));
-        });
-        $.when.apply($, promises).done(function(){
-          $('.content').html(content);
-          finish();
-        });
-      } else {
-        $('.content').html(content);
-        finish();
-      }
-    }});
+      return renderer;
+    })(),
+    smartypants: true
   };
-
-  var loadContent= function(){
-    $.getJSON('/config.json', function(data) {
-      renderPage(data.main);
+  var githubJsonp = function(url, callback, data) {
+    $.ajax({
+      // url for GitHub API 
+      url: 'https://api.github.com'+ url,
+      // the name of the callback parameter, as specified by the YQL service
+      jsonp: "callback",
+      // tell jQuery we're expecting JSONP
+      dataType: "jsonp",
+      // optional data
+      data: data,
+      // work with the response
+      success: function(response) {
+        callback(response);
+      }
     });
   };
-  loadContent();
+
+  var loadConfig = function(){
+    $.getJSON('/config.json', function(data) {
+      self.config = data;
+      loadPage();
+    });
+  };
+
+  var renderContent = function(data){
+    return marked(data, markedOptions);
+  };
+
+  var loadIncludes = function(includes, settings){
+    var promises = [];
+    $.each(includes, function(_, include) {
+      var deferred = new $.Deferred();
+      promises.push(deferred);
+      githubJsonp('/repos/'+ self.config.repo + '/contents/'+ include, function(response) {
+        self.content += renderContent(atob(response.data.content));
+        deferred.resolve();
+      });
+    });
+    $.when.apply($, promises).done(function(){
+      $('.content').html(self.content);
+      setLanguages(settings.language_tabs, settings);
+    });
+  };
+
+  var processSettings = function(settings){
+    if (settings.includes){
+      loadIncludes(settings.includes, settings);
+    } else {
+      $('.content').html(self.content);
+      setLanguages(settings.language_tabs, settings);
+    }
+  };
+
+  var setLanguages = function(languages, settings){
+    if (settings.toc_footers) {
+      $('.toc-footer').html('<li>'+ settings.toc_footers.join('</li><li>') +'</li>');
+    }
+    var languages_html = '';
+    $.each(languages, function( index, value ) {
+      languages_html += '<a href="#" data-language-name="'+ value +'">'+ value +'</a>';
+    });
+    $('.lang-selector').html(languages_html);
+    $(document).trigger('loaded');
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    setupLanguages(languages);
+  };
+
+  var loadPage = function() {
+    githubJsonp('/repos/'+ self.config.repo + '/contents/'+ self.config.main, function(response){
+      var settings;
+      var data = atob(response.data.content).split(/\n+---\n+/);
+      self.content = renderContent(data[1]);
+      settings = jsyaml.load(data[0]);
+      processSettings(settings);
+    });
+  };
+  // Load user config
+  loadConfig();
 })();
