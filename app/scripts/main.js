@@ -27,7 +27,7 @@
       $('pre code').each(function(i, block) {
         hljs.highlightBlock(block);
       });
-      hljs.initHighlightingOnLoad();
+      setupLanguages(settings.language_tabs);
     };
     if (settings.includes) {
       var promises = [];

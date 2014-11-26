@@ -10,7 +10,6 @@
     "highlightjs": "latest",
     "energize": "davidcalhoun/energize.js",
     "jquery-highlight": "latest",
-    "jquery.tocify.js": "latest",
     "lunr.js": "latest"
   },
   "devDependencies": {},
