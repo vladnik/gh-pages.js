@@ -16,7 +16,7 @@
       // url for GitHub API 
       url: 'https://api.github.com'+ url,
       // the name of the callback parameter, as specified by the YQL service
-      jsonpCallback: 'callback',
+      jsonpCallback: 'foo',
       // tell jQuery we're expecting JSONP
       dataType: "jsonp",
       // optional data
@@ -31,7 +31,7 @@
   };
 
   var loadConfig = function(){
-    $.getJSON('/config.json', function(data) {
+    $.getJSON('config.json', function(data) {
       self.config = data;
       loadPage();
     });
