@@ -16,11 +16,13 @@
       // url for GitHub API 
       url: 'https://api.github.com'+ url,
       // the name of the callback parameter, as specified by the YQL service
-      jsonp: "callback",
+      jsonpCallback: 'callback',
       // tell jQuery we're expecting JSONP
       dataType: "jsonp",
       // optional data
       data: data,
+      // Cache responses
+      cache: true,
       // work with the response
       success: function(response) {
         callback(response);
