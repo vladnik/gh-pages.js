@@ -58,6 +58,9 @@
   };
 
   var processSettings = function(settings){
+    if (settings.title){
+      $('title').html(settings.title);
+    }
     if (settings.includes){
       loadIncludes(settings.includes, settings);
     } else {
