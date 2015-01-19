@@ -30,7 +30,7 @@ Getting Started with GitHub Pages JS
 ------------------------------------
 
 1. Download latest release of the [gh-pages.js](https://github.com/vladnik/gh-pages.js/releases/tag/v0.0.2)
-2. Unpack archive and change config.js to match your needs
+2. Unpack archive and change config.json to match your needs
 3. Push resulting files as gh-pages branch of your application
 
 Configuration
