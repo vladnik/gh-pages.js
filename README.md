@@ -1,7 +1,7 @@
 GitHub Pages JS
 ========
 
-Create a beautiful API documentation in no time using Markdown and beautiful Slate template.
+Create a beautiful API documentation in no time using Markdown and beautiful Slate template. No dependencies, no compilation, no deployment, see your changes instantly. Check it out here vladnik.github.io/gh-pages.js
 
 Features
 ------------
