@@ -1,6 +1,7 @@
 'use strict';
-// 
+
 (function(){
+  var self = {};
   var markedOptions = {
     renderer: (function(){
       var renderer = new marked.Renderer();
@@ -11,10 +12,11 @@
     })(),
     smartypants: true
   };
+
   var githubJsonp = function(url, callback, data) {
     $.ajax({
-      // url for GitHub API 
-      url: 'https://api.github.com'+ url,
+      // url for GitHub API
+      url: 'https://api.github.com/repos/'+ self.config.repo + '/contents/'+ url,
       // the name of the callback parameter, as specified by the YQL service
       jsonpCallback: 'foo',
       // tell jQuery we're expecting JSONP
@@ -25,15 +27,23 @@
       cache: true,
       // work with the response
       success: function(response) {
-        callback(response);
+        return callback(atob(response.data.content));
       }
     });
+  };
+
+  var getFile = function (url, callback, data) {
+    if (self.config.local) {
+      $.get(url, callback);
+    } else {
+      githubJsonp(url, callback, data);
+    }
   };
 
   var loadConfig = function(){
     $.getJSON('config.json', function(data) {
       self.config = data;
-      loadPage();
+      return loadPage();
     });
   };
 
@@ -46,9 +56,9 @@
     $.each(includes, function(_, include) {
       var deferred = new $.Deferred();
       promises.push(deferred);
-      githubJsonp('/repos/'+ self.config.repo + '/contents/'+ include, function(response) {
-        self.content += renderContent(atob(response.data.content));
-        deferred.resolve();
+      getFile(include, function(response) {
+        self.content += renderContent(response);
+        return deferred.resolve();
       });
     });
     $.when.apply($, promises).done(function(){
@@ -86,9 +96,9 @@
   };
 
   var loadPage = function() {
-    githubJsonp('/repos/'+ self.config.repo + '/contents/'+ self.config.main, function(response){
+    getFile(self.config.main, function(response){
       var settings;
-      var data = atob(response.data.content).split(/\n+---\n+/);
+      var data = response.split(/\n+---\n+/);
       self.content = renderContent(data[1]);
       settings = jsyaml.load(data[0]);
       processSettings(settings);
